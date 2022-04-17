@@ -94,3 +94,6 @@ Map windowsTemplate = templateCreator.windowsTemplate('AmiValue', 'MyWindows', '
 
 println(windowsTemplate)
 
+String currentDir = new File(".").getAbsolutePath()
+println(currentDir)
+
