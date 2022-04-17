@@ -5,10 +5,10 @@ import jenkins.model.Jenkins
 
 class Templates {
 
-    private String securityGroup
-    private String subnetId
-    private String iamProfile
-    private String zone
+    private final String securityGroup
+    private final String subnetId
+    private final String iamProfile
+    private final String zone
 
     Templates(String securityGroup, String subnetId, String iamProfile, String zone) {
         this.securityGroup = securityGroup
@@ -17,12 +17,12 @@ class Templates {
         this.zone = zone
     }
 
-    public static Map baseTemplate() {
+    public Map baseTemplate() {
         return [
             ami: 'ami-AAAAAAAA',            // String
-            zone: zone,                     // String
+            zone: this.zone,                     // String
             spotConfig: null,               // SpotConfiguration
-            securityGroups: securityGroup,  // String
+            securityGroups: this.securityGroup,  // String
             remoteFS: '',                   // String
             type: InstanceType.fromValue('c5.xlarge'), // InstanceType
             ebsOptimized: false,                       // boolean
@@ -37,12 +37,12 @@ class Templates {
             amiType: null,          // AMITypeData
             jvmopts: '',            // String
             stopOnTerminate: true,  // boolean
-            subnetId: subnetId,     // String
+            subnetId: this.subnetId,     // String
             tags: null,             // List<EC2Tag>
             idleTerminationMinutes: '20',   // String
             usePrivateDnsName: false,       // boolean
             instanceCapStr: '5',            // String
-            iamInstanceProfile: iamProfile, // String
+            iamInstanceProfile: this.iamProfile, // String
             deleteRootOnTermination: true,  // boolean
             useEphemeralDevices: false,     // boolean
             useDedicatedTenancy: false,     // boolean
@@ -56,6 +56,7 @@ class Templates {
 
     public Map windowsTemplate(String ami, String name, String instanceType, String instanceCap) {
         Map windowsProps = baseTemplate()
+        windowsProps.ami = ami
         windowsProps.remoteFS = 'C:\\Jenkins'
         windowsProps.amiType = new WindowsData(null, false, '5', false, false)
         windowsProps.tags = [new EC2Tag('Name', name)]
@@ -69,6 +70,7 @@ class Templates {
 
     public Map ubuntuTemplate(String ami, String name, String instanceType, String instanceCap) {
         Map ubuntuProps = baseTemplate()
+        ubuntuProps.ami = ami
         ubuntuProps.remoteFS = '\\Jenkins'
         ubuntuProps.amiType = new UnixData(null, null, null, 22, null)
         ubuntuProps.tags = [new EC2Tag('Name', name)]
