@@ -5,10 +5,10 @@ import jenkins.model.Jenkins
 
 class Templates {
 
-    private final String securityGroup
-    private final String subnetId
-    private final String iamProfile
-    private final String zone
+    private String securityGroup
+    private String subnetId
+    private String iamProfile
+    private String zone
 
     Templates() {
         println("Empty Contructor")
