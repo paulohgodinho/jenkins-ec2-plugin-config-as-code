@@ -5,12 +5,12 @@ import jenkins.model.Jenkins
 
 class Templates {
 
-    String securityGroup
-    String subnetId
-    String iamProfile
-    String zone
+    private String securityGroup
+    private String subnetId
+    private String iamProfile
+    private String zone
 
-    Templates(String securityGroup, String subnetId, String iamProfile String zone) {
+    Templates(String securityGroup, String subnetId, String iamProfile, String zone) {
         this.securityGroup = securityGroup
         this.subnetId = subnetId
         this.iamProfile = iamProfile
