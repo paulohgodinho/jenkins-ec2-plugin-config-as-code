@@ -10,6 +10,10 @@ class Templates {
     private final String iamProfile
     private final String zone
 
+    Templates() {
+        println("Empty Contructor")
+    }
+
     Templates(String securityGroup, String subnetId, String iamProfile, String zone) {
         this.securityGroup = securityGroup
         this.subnetId = subnetId
