@@ -1,0 +1,20 @@
+{
+    "extends": "recommended",
+    "rules": {
+        "ClassJavadoc": {
+            "enabled": false
+        },
+        "CompileStatic": {
+            "enabled": false
+        },
+        "DuplicateStringLiteral": {
+            "enabled": false
+        },
+        "LineLength": {
+            "enabled": false
+        },
+        "UnnecessaryObjectReferences": {
+            "enabled": false
+        }
+    }
+}
