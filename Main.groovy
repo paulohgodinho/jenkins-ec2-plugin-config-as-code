@@ -103,7 +103,7 @@ class Templates {
         windowsProps.type = InstanceType.fromValue(instanceType)
         windowsProps.instanceCapStr = instanceCap
 
-        nodeTemplate = getTemplateFromProps(windowsProps)
+        SlaveTemplate nodeTemplate = getTemplateFromProps(windowsProps)
         nodeTemplate.setHostKeyVerificationStrategy(HostKeyVerificationStrategyEnum.OFF)
         return nodeTemplate
     }
@@ -120,7 +120,7 @@ class Templates {
         ubuntuProps.type = InstanceType.fromValue(instanceType)
         ubuntuProps.instanceCapStr = instanceCap
 
-        nodeTemplate = getTemplateFromProps(ubuntuProps)
+        SlaveTemplate nodeTemplate = getTemplateFromProps(ubuntuProps)
         nodeTemplate.setHostKeyVerificationStrategy(HostKeyVerificationStrategyEnum.OFF)
         return nodeTemplate
     }
