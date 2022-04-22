@@ -1,3 +1,13 @@
+/*** BEGIN META {
+  "name" : "Configure EC2 Cloud - EC2 Plugin",
+  "comment" : "Modify this script to setup your nodes, instead of using the UI",
+  "parameters" : [],
+  "core": "2.0",
+  "authors" : [
+    { name : "Paulo Godinho" }
+  ]
+} END META**/
+
 import com.amazonaws.services.ec2.model.InstanceType
 import hudson.model.*
 import hudson.plugins.ec2.*
@@ -127,13 +137,26 @@ class Templates {
 
 }
 
+def nodes = []
+
+// Cloud Settings
+def amazonEC2CloudProps = [
+  cloudName: 'AWSEC2',
+  instanceCapStr: '15',
+  region: 'us-east-2',
+  useInstanceProfileForCredentials: true,
+  sshKeysCredentialsId: 'tooling/jenkins/privatekey',
+  privateKey: '',
+  credentialsId:  '',
+]
+
+// Base Settings Shared by All Machines
 Templates templateHelper = new Templates(
     'sg-0d2378908402832',
     'subnet-0c5a259319a43657a',
     'arn:aws:iam::321762876544:instance-profile/JenkinsManagedInstancesRole')
 
-def nodes = []
-// Add your nodes here
+// Define your nodes here
 
 // Example Windows Node
 SlaveTemplate windowsNode = templateHelper.windowsTemplate(
@@ -156,16 +179,6 @@ SlaveTemplate ubuntuNode = templateHelper.ubuntuTemplate(
     '10'
 )
 nodes.add(ubuntuNode)
-
-def amazonEC2CloudProps = [
-  cloudName: 'AWSEC2',
-  instanceCapStr: '15',
-  region: 'us-east-2',
-  useInstanceProfileForCredentials: true,
-  sshKeysCredentialsId: 'tooling/jenkins/privatekey',
-  privateKey: '',
-  credentialsId:  '',
-]
 
 AmazonEC2Cloud amazonEC2Cloud = new AmazonEC2Cloud(
   amazonEC2CloudProps.cloudName,
