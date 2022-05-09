@@ -135,6 +135,23 @@ class Templates {
         return nodeTemplate
     }
 
+    public SlaveTemplate centOSTemplate(String ami, String name, String label, String description, String instanceType, String instanceCap) {
+        Map centOsProps = baseTemplate()
+        centOsProps.ami = ami
+        centOsProps.description = description
+        centOsProps.labelString = label
+        centOsProps.remoteFS = '/home/centos'
+        centOsProps.amiType = new UnixData(null, null, null, '22', null)
+        centOsProps.tags = [new EC2Tag('Name', name)]
+        centOsProps.remoteAdmin = 'centos'
+        centOsProps.type = InstanceType.fromValue(instanceType)
+        centOsProps.instanceCapStr = instanceCap
+
+        SlaveTemplate nodeTemplate = getTemplateFromProps(centOsProps)
+        nodeTemplate.setHostKeyVerificationStrategy(HostKeyVerificationStrategyEnum.OFF)
+        return nodeTemplate
+    }
+
 }
 
 def nodes = []
@@ -150,13 +167,17 @@ def amazonEC2CloudProps = [
   credentialsId:  '',
 ]
 
-// Base Settings Shared by All Machines
+
+
+
+// Define your nodes here
+// ----------------------------------------------------
+
+// Base Settings Shared by Machines created using it
 Templates templateHelper = new Templates(
     'sg-0d2378908402832',
     'subnet-0c5a259319a43657a',
     'arn:aws:iam::321762876544:instance-profile/JenkinsManagedInstancesRole')
-
-// Define your nodes here
 
 // Example Windows Node
 SlaveTemplate windowsNode = templateHelper.windowsTemplate(
@@ -193,11 +214,30 @@ AmazonEC2Cloud amazonEC2Cloud = new AmazonEC2Cloud(
   ''
 )
 
-// Clean all Clouds
-Jenkins jenkins = Jenkins.getInstance()
-jenkins.clouds.clear()
-jenkins.save()
 
-// Add new one
-jenkins.clouds.add(amazonEC2Cloud)
+Jenkins jenkins = Jenkins.getInstance()
+
+def cloudList = []
+for(int i = 0; i < jenkins.clouds.size(); i++) {
+
+  if(jenkins.clouds[i] instanceof hudson.plugins.ec2.AmazonEC2Cloud) {
+  	println("Ec2Cloud Index:" + i)
+  }
+  else {
+      cloudList.add(jenkins.clouds[i])
+  }
+}
+println("Number of Clouds Saved: " + cloudList.size())
+
+// Adding cloud created via code
+cloudList.add(amazonEC2Cloud)
+
+// Clearing all clouds
+jenkins.clouds.clear()
+
+// Populating clouds list with older and new one
+cloudList.each {
+    jenkins.clouds.add(it)
+}
+
 jenkins.save()
